@@ -1,0 +1,48 @@
+{
+  "kind": "feature_evidence_report",
+  "features": [
+    {
+      "featureId": "feature-reproduce-the-issue-where-clicking-the-order-tracking-tab-causes-the-app-ui-to-become-blank-empty-identify-the-exact-runtime-error-or-ui-lock-up-causing-the-blank-screen-and-implement-a-fix-so-the-orders-view-reliably-renders-and-remains-interactive-after-tab-navigation",
+      "featureTitle": "Reproduce the issue where clicking the \"Order Tracking\" (متابعة الطلبات) tab causes the app UI to become blank/empty, identify the exact runtime error or UI lock-up causing the blank screen, and implement a fix so the Orders view reliably renders and remains interactive after tab navigation.",
+      "files": [
+        "frontend/src/App.tsx",
+        "frontend/src/features/orders/OrderTrackingSection.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "blob-storage@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-19"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-harden-order-tracking-reminder-related-code-paths-so-that-browser-apis-cannot-crash-rendering-ensure-notification-creation-and-any-storage-access-performed-during-reminder-checks-cannot-throw-uncaught-exceptions-and-add-defensive-try-catch-logging-where-needed",
+      "featureTitle": "Harden Order Tracking reminder-related code paths so that browser APIs cannot crash rendering: ensure Notification creation and any storage access performed during reminder checks cannot throw uncaught exceptions, and add defensive try/catch + logging where needed.",
+      "files": [
+        "frontend/src/features/orders/OrderTrackingSection.tsx",
+        "frontend/src/features/orders/useReminderScheduler.ts",
+        "frontend/src/utils/modalCleanup.ts"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "blob-storage@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-20"
+      ],
+      "confidence": "high"
+    }
+  ]
+}

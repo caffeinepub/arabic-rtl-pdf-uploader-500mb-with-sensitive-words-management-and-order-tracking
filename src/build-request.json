@@ -1,0 +1,55 @@
+{
+  "kind": "build_request",
+  "title": "Fix blank screen when opening the Order Tracking tab",
+  "priority": "high",
+  "requirements": [
+    {
+      "id": "REQ-19",
+      "text": "Reproduce the issue where clicking the \"Order Tracking\" (متابعة الطلبات) tab causes the app UI to become blank/empty, identify the exact runtime error or UI lock-up causing the blank screen, and implement a fix so the Orders view reliably renders and remains interactive after tab navigation.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-7"
+        ],
+        "quotes": [
+          "عند الضغط على زر متابعة الطلبات تصبح الشاشة فاضية"
+        ]
+      },
+      "acceptanceCriteria": [
+        "From a fresh load, clicking the \"Order Tracking\" tab consistently displays the Order Tracking UI and does not result in a blank/empty screen.",
+        "No uncaught exceptions are thrown in the browser console when switching to the Orders tab.",
+        "If an error occurs in the Orders tab at runtime, the app shows the existing global error boundary fallback instead of a blank screen."
+      ]
+    },
+    {
+      "id": "REQ-20",
+      "text": "Harden Order Tracking reminder-related code paths so that browser APIs cannot crash rendering: ensure Notification creation and any storage access performed during reminder checks cannot throw uncaught exceptions, and add defensive try/catch + logging where needed.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-7"
+        ],
+        "quotes": [
+          "عند الضغط على زر متابعة الطلبات تصبح الشاشة فاضية"
+        ]
+      },
+      "acceptanceCriteria": [
+        "If Notifications are blocked/unsupported/permission-denied, opening the Orders tab still renders normally and no blank screen occurs.",
+        "If the browser throws when attempting to construct a Notification, the error is caught and logged, and the Orders tab remains usable.",
+        "Reminder checks continue to function when supported, without causing render crashes."
+      ]
+    }
+  ],
+  "constraints": [
+    "Do not edit files under frontend/src/components/ui (read-only UI components).",
+    "Do not change frontend immutable paths: frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useInternetIdentity.tsx, frontend/src/hooks/useActor.ts, frontend/src/main.tsx, frontend/src/components/ui."
+  ],
+  "nonGoals": [
+    "Do not redesign the Orders feature or change its data fields/CRUD behavior beyond what is needed to fix the blank-screen bug.",
+    "Do not add new authentication providers (Internet Identity remains the only auth method)."
+  ],
+  "imageRequirements": {
+    "required": [],
+    "edits": []
+  }
+}

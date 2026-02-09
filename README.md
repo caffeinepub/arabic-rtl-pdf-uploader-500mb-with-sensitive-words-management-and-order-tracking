@@ -1,2 +1,3 @@
-# arabic-rtl-pdf-uploader-500mb-with-sensitive-words-management-and-order-tracking
-Exported from Caffeine project: Arabic (RTL) PDF uploader (500MB+) with Sensitive Words management and Order Tracking reminders
+## 
+
+To run app build and run docker image: `docker build -t app . docker run -it --network host app`

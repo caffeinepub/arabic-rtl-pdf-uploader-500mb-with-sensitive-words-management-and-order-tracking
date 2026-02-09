@@ -1,0 +1,206 @@
+{
+  "schemaVersion": "1.0.0",
+  "projectStateVersion": 11,
+  "summary": "تطبيق عربي لرفع ملفات PDF كبيرة (500MB+) مع إدارة الكلمات الحساسة (إضافة/تعديل/حذف وإظهار/إخفاء) وقسم \"متابعة الطلبات\" لإدخال بيانات الطلب وتنبيه منبثق على الكمبيوتر عند تاريخ التذكير.",
+  "architectural_notes": [
+    "ملاحظة توافق المتصفح/العرض: يجب أن تكون النوافذ المنبثقة (modals) وطبقات الـ overlay متوافقة مع Chrome وأن تتجنب أنماط/خصائص CSS قد تسبب blank screen (مثل مشاكل z-index/position/fixed/transform/overflow أو الاعتماد على GPU rendering)."
+  ],
+  "known_issues": [
+    "عند فتح نافذة منبثقة داخل التطبيق على Chrome: تظهر النتائج للحظة ثم تتحول واجهة التطبيق إلى شاشة فارغة (blank screen). المستخدم طلب إصلاح المشكلة برمجيًا.",
+    "رفع ملفات PDF يفشل: عند الضغط على زر رفع الملفات تظهر رسالة \"فشل رفع الملفات\".",
+    "عند الضغط على زر/قسم \"متابعة الطلبات\" تصبح واجهة التطبيق شاشة فارغة (blank screen)."
+  ],
+  "isFixRequest": true,
+  "existing_features": [
+    {
+      "id": "feature-create-an-arabic-rtl-single-page-app-ui-with-navigation-sections-for-1-pdf-upload-2-sensitive-words-3-order-tracking-ensure-the-overall-layout-uses-rtl-direction-and-arabic-friendly-typography-defaults-while-keeping-all-build-request-text-in-english",
+      "title": "Create an Arabic (RTL) single-page app UI with navigation/sections for: (1) PDF Upload, (2) Sensitive Words, (3) Order Tracking. Ensure the overall layout uses RTL direction and Arabic-friendly typography defaults (while keeping all build-request text in English).",
+      "reqIds": [
+        "REQ-1"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-build-the-pdf-upload-ui-that-uploads-files-in-chunks-with-progress-indication-supports-resuming-after-transient-failures-retry-and-validates-that-the-selected-file-is-a-pdf-provide-a-list-of-uploaded-pdfs-with-basic-metadata-and-a-download-open-action",
+      "title": "Build the PDF upload UI that uploads files in chunks with progress indication, supports resuming after transient failures (retry), and validates that the selected file is a PDF. Provide a list of uploaded PDFs with basic metadata and a download/open action.",
+      "reqIds": [
+        "REQ-3"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-sensitive-words-module-that-stores-user-entered-words-phrases-supporting-add-edit-and-delete-operations-allow-entering-either-a-single-word-or-multiple-words-at-once-e-g-separated-by-new-lines-or-commas",
+      "title": "Add a 'Sensitive Words' module that stores user-entered words/phrases, supporting add, edit, and delete operations. Allow entering either a single word or multiple words at once (e.g., separated by new lines or commas).",
+      "reqIds": [
+        "REQ-4"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-a-show-hide-feature-for-the-sensitive-words-list-so-the-ui-can-mask-the-words-by-default-or-on-toggle-and-reveal-them-only-when-the-user-chooses",
+      "title": "Implement a show/hide feature for the Sensitive Words list so the UI can mask the words by default (or on toggle) and reveal them only when the user chooses.",
+      "reqIds": [
+        "REQ-5"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-an-order-tracking-module-with-a-main-record-called-order-tracking-that-supports-creating-viewing-editing-and-deleting-orders-with-fields-order-number-book-title-transfer-entity-transfer-date-reminder-date-notes",
+      "title": "Add an 'Order Tracking' module with a main record called 'Order Tracking' that supports creating, viewing, editing, and deleting orders with fields: Order Number, Book Title, Transfer Entity, Transfer Date, Reminder Date, Notes.",
+      "reqIds": [
+        "REQ-6"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-provide-reminder-functionality-when-an-order-s-reminder-date-time-is-reached-show-an-on-screen-reminder-popup-in-the-app-and-attempt-a-system-level-browser-notification-if-the-user-has-granted-permission",
+      "title": "Provide reminder functionality: when an order's Reminder Date/time is reached, show an on-screen reminder popup in the app, and attempt a system-level browser notification if the user has granted permission.",
+      "reqIds": [
+        "REQ-7"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-define-and-apply-a-coherent-visual-theme-appropriate-for-an-arabic-business-utility-app-distinct-color-palette-not-centered-on-blue-purple-consistent-typography-spacing-and-component-styling-across-all-screens",
+      "title": "Define and apply a coherent visual theme appropriate for an Arabic business utility app (distinct color palette not centered on blue/purple), consistent typography, spacing, and component styling across all screens.",
+      "reqIds": [
+        "REQ-8"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-client-side-pdf-scanning-feature-that-for-the-currently-selected-uploaded-pdf-file-extracts-text-per-page-and-detects-occurrences-of-the-saved-sensitive-words-phrases-then-produces-a-match-report-containing-a-the-matched-word-phrase-and-b-the-pdf-page-numbers-where-it-appears",
+      "title": "Add a client-side PDF scanning feature that, for the currently selected/uploaded PDF file, extracts text per page and detects occurrences of the saved Sensitive Words/phrases, then produces a match report containing (a) the matched word/phrase and (b) the PDF page numbers where it appears.",
+      "reqIds": [
+        "REQ-9"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-in-the-pdf-upload-section-display-the-scan-results-in-a-separate-clearly-delineated-ui-area-a-dedicated-card-section-that-does-not-replace-the-existing-upload-ui-show-results-in-a-tabular-format-with-at-least-two-columns-matched-word-phrase-and-pages",
+      "title": "In the PDF Upload section, display the scan results in a separate, clearly delineated UI area (a dedicated card/section) that does not replace the existing upload UI. Show results in a tabular format with at least two columns: “Matched word/phrase” and “Pages”.",
+      "reqIds": [
+        "REQ-10"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-provide-basic-scan-ux-controls-and-feedback-a-scan-action-a-scanning-in-progress-indicator-and-the-ability-to-cancel-stop-the-scan-without-breaking-the-upload-flow",
+      "title": "Provide basic scan UX controls and feedback: a “Scan” action, a scanning-in-progress indicator, and the ability to cancel/stop the scan without breaking the upload flow.",
+      "reqIds": [
+        "REQ-11"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-reproduce-and-fix-the-issue-where-after-a-popup-modal-appears-the-app-briefly-shows-content-e-g-scan-results-and-then-turns-into-a-blank-empty-screen-in-chrome-the-ui-must-remain-visible-and-interactive-after-opening-and-closing-the-popup",
+      "title": "Reproduce and fix the issue where, after a popup/modal appears, the app briefly shows content (e.g., scan results) and then turns into a blank/empty screen in Chrome. The UI must remain visible and interactive after opening and closing the popup.",
+      "reqIds": [
+        "REQ-12"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-global-react-error-boundary-around-the-application-ui-so-that-if-a-runtime-render-error-occurs-including-those-triggered-by-opening-a-popup-modal-the-user-sees-a-non-blank-fallback-screen-with-a-recovery-action-all-user-facing-text-added-for-this-fallback-must-be-in-english",
+      "title": "Add a global React error boundary around the application UI so that if a runtime render error occurs (including those triggered by opening a popup/modal), the user sees a non-blank fallback screen with a recovery action. All user-facing text added for this fallback must be in English.",
+      "reqIds": [
+        "REQ-13"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-harden-the-popup-modal-implementations-used-by-the-app-e-g-reminder-popup-and-profile-setup-dialog-to-avoid-chrome-rendering-blank-screen-issues-ensure-popups-cleanly-mount-unmount-do-not-leave-the-page-in-an-invisible-locked-state-and-do-not-depend-on-brittle-behavior-e-g-focus-scroll-locking-that-can-break-rendering-in-chrome",
+      "title": "Harden the popup/modal implementations used by the app (e.g., reminder popup and profile setup dialog) to avoid Chrome rendering/blank-screen issues: ensure popups cleanly mount/unmount, do not leave the page in an invisible/locked state, and do not depend on brittle behavior (e.g., focus/scroll locking) that can break rendering in Chrome.",
+      "reqIds": [
+        "REQ-14"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-reproduce-the-pdf-upload-failure-that-shows-the-message-when-the-user-clicks-the-upload-button-and-identify-whether-the-failure-originates-from-frontend-file-handling-e-g-reading-the-entire-file-into-memory-backend-canister-upload-logic-or-authorization-checks",
+      "title": "Reproduce the PDF upload failure that shows the message “فشل رفع الملفات” when the user clicks the upload button, and identify whether the failure originates from frontend file handling (e.g., reading the entire file into memory), backend canister upload logic, or authorization checks.",
+      "reqIds": [
+        "REQ-15"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-frontend-src-features-pdf-pdfuploadsection-tsx-to-avoid-reading-the-entire-pdf-into-memory-before-upload-selectedfile-arraybuffer-and-instead-use-the-existing-chunked-resumable-upload-approach-provided-by-the-project-s-upload-utilities-externalblob-integration-so-large-pdfs-including-500mb-can-upload-reliably",
+      "title": "Update `frontend/src/features/pdf/PdfUploadSection.tsx` to avoid reading the entire PDF into memory before upload (`selectedFile.arrayBuffer()`), and instead use the existing chunked/resumable upload approach provided by the project’s upload utilities/`ExternalBlob` integration so large PDFs (including 500MB+) can upload reliably.",
+      "reqIds": [
+        "REQ-17"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-improve-upload-error-handling-in-the-pdf-upload-ui-so-that-when-upload-fails-the-ui-logs-and-surfaces-a-useful-english-error-message-that-includes-the-underlying-failure-reason-e-g-unauthorized-payload-too-large-storage-error-while-still-showing-a-simple-english-user-facing-failure-toast-message",
+      "title": "Improve upload error handling in the PDF upload UI so that when upload fails, the UI logs and surfaces a useful English error message that includes the underlying failure reason (e.g., unauthorized, payload too large, storage error), while still showing a simple English user-facing failure toast/message.",
+      "reqIds": [
+        "REQ-18"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-reproduce-the-issue-where-clicking-the-order-tracking-tab-causes-the-app-ui-to-become-blank-empty-identify-the-exact-runtime-error-or-ui-lock-up-causing-the-blank-screen-and-implement-a-fix-so-the-orders-view-reliably-renders-and-remains-interactive-after-tab-navigation",
+      "title": "Reproduce the issue where clicking the \"Order Tracking\" (متابعة الطلبات) tab causes the app UI to become blank/empty, identify the exact runtime error or UI lock-up causing the blank screen, and implement a fix so the Orders view reliably renders and remains interactive after tab navigation.",
+      "reqIds": [
+        "REQ-19"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-harden-order-tracking-reminder-related-code-paths-so-that-browser-apis-cannot-crash-rendering-ensure-notification-creation-and-any-storage-access-performed-during-reminder-checks-cannot-throw-uncaught-exceptions-and-add-defensive-try-catch-logging-where-needed",
+      "title": "Harden Order Tracking reminder-related code paths so that browser APIs cannot crash rendering: ensure Notification creation and any storage access performed during reminder checks cannot throw uncaught exceptions, and add defensive try/catch + logging where needed.",
+      "reqIds": [
+        "REQ-20"
+      ],
+      "version": 1
+    }
+  ],
+  "new_feature_requests": [
+    {
+      "id": "AR-1",
+      "summary": "إنشاء تطبيق باللغة العربية يدعم رفع ملفات PDF بحجم 500MB أو أكثر",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-2",
+      "summary": "إضافة قسم/خلية \"الكلمات الحساسة\" لتخزين كلمات/مجموعات كلمات مع إمكانيات الإضافة والتعديل والحذف وخيار إظهار/إخفاء الكلمات الحساسة",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-3",
+      "summary": "إضافة قسم رئيسي \"متابعة الطلبات\" لإدخال بيانات الطلب (رقم الطلب، عنوان الكتاب، جهة التحويل، تاريخ التحويل، تاريخ التذكير، ملاحظات) مع تنبيه نافذة منبثقة على الكمبيوتر عند حلول تاريخ التذكير",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-5",
+      "summary": "Implement backend support for uploading and storing large PDF files (>= 500MB) using a chunked upload protocol suitable for Internet Computer message size limits. Persist file bytes and metadata in stable storage so uploads remain available after canister upgrade/restart.",
+      "reqIds": [
+        "REQ-2"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-6",
+      "summary": "إضافة خاصية فحص/اكتشاف الكلمات الحساسة داخل ملفات PDF المرفوعة: مطابقة الكلمات/العبارات المحفوظة وإظهار النتائج في قسم/خلية منفصلة مع تحديد أرقام الصفحات التي ظهرت فيها.",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-8",
+      "summary": "Implement `uploadSensitiveFile` in `backend/main.mo` so it actually persists the uploaded PDF bytes and metadata using the already-included blob storage mixin (`include MixinStorage();`). The method must not silently discard the uploaded content.",
+      "reqIds": [
+        "REQ-16"
+      ],
+      "status": "pending"
+    }
+  ],
+  "gameProjectType": "none",
+  "projectName": "Arabic (RTL) PDF uploader (500MB+) with Sensitive Words management and Order Tracking reminders",
+  "clarification_mode": "instant",
+  "clarification_rounds": 0
+}

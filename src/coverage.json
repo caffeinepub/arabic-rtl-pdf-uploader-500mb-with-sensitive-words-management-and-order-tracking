@@ -1,0 +1,57 @@
+{
+  "kind": "coverage_report",
+  "version": "1.0",
+  "generatedAt": "2026-02-09T05:32:00.302Z",
+  "sources": {
+    "buildRequest": true,
+    "implementationPlan": true
+  },
+  "requirements": {
+    "total": 2,
+    "implemented": 2,
+    "items": [
+      {
+        "id": "REQ-19",
+        "summary": "Reproduce the issue where clicking the \"Order Tracking\" (متابعة الطلبات) tab causes the app UI to become blank/empty, identify the exact runtime error or UI lock-up causing the blank screen, and implement a fix so the Orders view reliably renders and remains interactive after tab navigation.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/App.tsx",
+          "frontend/src/features/orders/OrderTrackingSection.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/App.tsx",
+          "frontend/src/features/orders/OrderTrackingSection.tsx"
+        ]
+      },
+      {
+        "id": "REQ-20",
+        "summary": "Harden Order Tracking reminder-related code paths so that browser APIs cannot crash rendering: ensure Notification creation and any storage access performed during reminder checks cannot throw uncaught exceptions, and add defensive try/catch + logging where needed.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/features/orders/useReminderScheduler.ts",
+          "frontend/src/features/orders/OrderTrackingSection.tsx",
+          "frontend/src/utils/modalCleanup.ts"
+        ],
+        "matchedFiles": [
+          "frontend/src/features/orders/useReminderScheduler.ts",
+          "frontend/src/features/orders/OrderTrackingSection.tsx",
+          "frontend/src/utils/modalCleanup.ts"
+        ]
+      }
+    ]
+  },
+  "changedFiles": [
+    "build-request.json",
+    "feature_evidence.json",
+    "frontend-file-summaries.txt",
+    "frontend-implementation-plan.json",
+    "frontend/src/App.tsx",
+    "frontend/src/features/orders/OrderTrackingSection.tsx",
+    "frontend/src/features/orders/useReminderScheduler.ts",
+    "frontend/src/utils/modalCleanup.ts",
+    "project_state.json",
+    "scratch/component-selection.json",
+    "spec.md",
+    "spec_vs_diff_report.json"
+  ]
+}
