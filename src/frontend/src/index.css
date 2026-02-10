@@ -4,39 +4,47 @@
 
 @layer base {
     :root {
-        --radius: 0.5rem;
-        --background: 0.98 0.01 45;
-        --foreground: 0.25 0.02 45;
+        --radius: 0.75rem;
+        /* Light neutral background similar to WhatsApp */
+        --background: 0.96 0.005 90;
+        --foreground: 0.20 0.015 30;
+        /* Clean white cards */
         --card: 1 0 0;
-        --card-foreground: 0.25 0.02 45;
+        --card-foreground: 0.20 0.015 30;
         --popover: 1 0 0;
-        --popover-foreground: 0.25 0.02 45;
-        --primary: 0.55 0.15 160;
+        --popover-foreground: 0.20 0.015 30;
+        /* Warm terracotta primary (from screenshot) */
+        --primary: 0.58 0.14 25;
         --primary-foreground: 0.99 0 0;
-        --secondary: 0.92 0.03 45;
-        --secondary-foreground: 0.25 0.02 45;
-        --muted: 0.95 0.02 45;
-        --muted-foreground: 0.50 0.02 45;
-        --accent: 0.88 0.08 85;
-        --accent-foreground: 0.25 0.02 45;
+        /* Soft secondary */
+        --secondary: 0.94 0.01 90;
+        --secondary-foreground: 0.20 0.015 30;
+        /* Muted backgrounds */
+        --muted: 0.97 0.005 90;
+        --muted-foreground: 0.50 0.01 30;
+        /* Subtle accent */
+        --accent: 0.95 0.01 90;
+        --accent-foreground: 0.20 0.015 30;
+        /* Destructive */
         --destructive: 0.55 0.22 25;
         --destructive-foreground: 0.99 0 0;
-        --border: 0.88 0.02 45;
-        --input: 0.88 0.02 45;
-        --ring: 0.55 0.15 160;
+        /* Soft borders */
+        --border: 0.90 0.005 90;
+        --input: 0.90 0.005 90;
+        --ring: 0.58 0.14 25;
         --chart-1: 0.60 0.18 160;
         --chart-2: 0.65 0.12 85;
         --chart-3: 0.50 0.20 200;
         --chart-4: 0.70 0.15 45;
         --chart-5: 0.55 0.18 25;
-        --sidebar: 0.98 0.01 45;
-        --sidebar-foreground: 0.25 0.02 45;
-        --sidebar-primary: 0.55 0.15 160;
+        --sidebar: 0.96 0.005 90;
+        --sidebar-foreground: 0.20 0.015 30;
+        --sidebar-primary: 0.58 0.14 25;
         --sidebar-primary-foreground: 0.99 0 0;
-        --sidebar-accent: 0.92 0.03 45;
-        --sidebar-accent-foreground: 0.25 0.02 45;
-        --sidebar-border: 0.88 0.02 45;
-        --sidebar-ring: 0.55 0.15 160;
+        --sidebar-accent: 0.94 0.01 90;
+        --sidebar-accent-foreground: 0.20 0.015 30;
+        --sidebar-border: 0.90 0.005 90;
+        --sidebar-ring: 0.58 0.14 25;
     }
 
     .dark {
@@ -46,7 +54,7 @@
         --card-foreground: 0.95 0.01 45;
         --popover: 0.20 0.02 45;
         --popover-foreground: 0.95 0.01 45;
-        --primary: 0.65 0.18 160;
+        --primary: 0.65 0.18 25;
         --primary-foreground: 0.15 0.02 45;
         --secondary: 0.28 0.02 45;
         --secondary-foreground: 0.95 0.01 45;
@@ -58,7 +66,7 @@
         --destructive-foreground: 0.95 0.01 45;
         --border: 0.30 0.02 45;
         --input: 0.30 0.02 45;
-        --ring: 0.65 0.18 160;
+        --ring: 0.65 0.18 25;
         --chart-1: 0.60 0.18 160;
         --chart-2: 0.65 0.12 85;
         --chart-3: 0.50 0.20 200;
@@ -66,12 +74,12 @@
         --chart-5: 0.55 0.18 25;
         --sidebar: 0.22 0.02 45;
         --sidebar-foreground: 0.95 0.01 45;
-        --sidebar-primary: 0.65 0.18 160;
+        --sidebar-primary: 0.65 0.18 25;
         --sidebar-primary-foreground: 0.95 0.01 45;
         --sidebar-accent: 0.28 0.02 45;
         --sidebar-accent-foreground: 0.95 0.01 45;
         --sidebar-border: 0.30 0.02 45;
-        --sidebar-ring: 0.65 0.18 160;
+        --sidebar-ring: 0.65 0.18 25;
     }
 
     * {
@@ -96,3 +104,25 @@
         -moz-osx-font-smoothing: grayscale;
     }
 }
+
+@layer components {
+    /* Pill-style tabs */
+    .tabs-pill-list {
+        @apply inline-flex h-11 items-center justify-center rounded-full bg-muted p-1 text-muted-foreground;
+    }
+    
+    .tabs-pill-trigger {
+        @apply inline-flex items-center justify-center whitespace-nowrap rounded-full px-6 py-2 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm;
+    }
+
+    /* Dashed upload zone */
+    .upload-dropzone {
+        @apply border-2 border-dashed border-border rounded-xl p-12 text-center bg-muted/30 hover:bg-muted/50 transition-colors;
+    }
+
+    /* Soft card styling */
+    .card-soft {
+        @apply rounded-xl border border-border bg-card shadow-sm;
+    }
+}
+

@@ -2,11 +2,12 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-reproduce-the-issue-where-clicking-the-order-tracking-tab-causes-the-app-ui-to-become-blank-empty-identify-the-exact-runtime-error-or-ui-lock-up-causing-the-blank-screen-and-implement-a-fix-so-the-orders-view-reliably-renders-and-remains-interactive-after-tab-navigation",
-      "featureTitle": "Reproduce the issue where clicking the \"Order Tracking\" (متابعة الطلبات) tab causes the app UI to become blank/empty, identify the exact runtime error or UI lock-up causing the blank screen, and implement a fix so the Orders view reliably renders and remains interactive after tab navigation.",
+      "featureId": "feature-restyle-the-global-app-shell-header-page-background-content-container-to-visually-match-the-provided-screenshot-a-clean-light-background-a-compact-top-bar-and-a-centered-content-area-with-generous-whitespace-while-preserving-rtl-layout-behavior",
+      "featureTitle": "Restyle the global app shell (header + page background + content container) to visually match the provided screenshot: a clean light background, a compact top bar, and a centered content area with generous whitespace, while preserving RTL layout behavior.",
       "files": [
         "frontend/src/App.tsx",
-        "frontend/src/features/orders/OrderTrackingSection.tsx"
+        "frontend/src/index.css",
+        "frontend/tailwind.config.js"
       ],
       "components": [
         "authorization@4.0.0",
@@ -18,17 +19,16 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-19"
+        "REQ-21"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-harden-order-tracking-reminder-related-code-paths-so-that-browser-apis-cannot-crash-rendering-ensure-notification-creation-and-any-storage-access-performed-during-reminder-checks-cannot-throw-uncaught-exceptions-and-add-defensive-try-catch-logging-where-needed",
-      "featureTitle": "Harden Order Tracking reminder-related code paths so that browser APIs cannot crash rendering: ensure Notification creation and any storage access performed during reminder checks cannot throw uncaught exceptions, and add defensive try/catch + logging where needed.",
+      "featureId": "feature-update-the-tab-navigation-styling-to-match-the-screenshot-s-pill-style-segmented-navigation-rounded-tabs-subtle-border-clear-active-state-without-changing-the-existing-tab-destinations-or-functionality",
+      "featureTitle": "Update the tab navigation styling to match the screenshot’s pill-style segmented navigation (rounded tabs, subtle border, clear active state), without changing the existing tab destinations or functionality.",
       "files": [
-        "frontend/src/features/orders/OrderTrackingSection.tsx",
-        "frontend/src/features/orders/useReminderScheduler.ts",
-        "frontend/src/utils/modalCleanup.ts"
+        "frontend/src/App.tsx",
+        "frontend/src/index.css"
       ],
       "components": [
         "authorization@4.0.0",
@@ -40,7 +40,51 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-20"
+        "REQ-22"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-restyle-the-pdf-upload-screen-to-match-the-screenshot-a-prominent-upload-card-with-a-large-dashed-drop-zone-centered-iconography-and-a-primary-call-to-action-button-while-keeping-all-existing-upload-scanning-capabilities-and-keeping-scan-results-in-a-separate-clearly-delineated-area-not-replacing-the-upload-ui",
+      "featureTitle": "Restyle the PDF Upload screen to match the screenshot: a prominent upload card with a large dashed drop-zone, centered iconography, and a primary call-to-action button, while keeping all existing upload/scanning capabilities and keeping scan results in a separate, clearly delineated area (not replacing the upload UI).",
+      "files": [
+        "frontend/src/features/pdf/PdfUploadSection.tsx",
+        "frontend/src/index.css"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "blob-storage@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-23"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-align-cards-borders-radius-and-shadow-styling-across-all-three-sections-pdf-upload-sensitive-words-order-tracking-to-match-the-screenshot-s-soft-card-appearance-and-consistent-spacing-without-introducing-new-product-features",
+      "featureTitle": "Align cards, borders, radius, and shadow styling across all three sections (PDF Upload, Sensitive Words, Order Tracking) to match the screenshot’s soft card appearance and consistent spacing, without introducing new product features.",
+      "files": [
+        "frontend/src/features/orders/OrderTrackingSection.tsx",
+        "frontend/src/features/pdf/PdfUploadSection.tsx",
+        "frontend/src/features/sensitiveWords/SensitiveWordsSection.tsx",
+        "frontend/src/index.css"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "blob-storage@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-24"
       ],
       "confidence": "high"
     }

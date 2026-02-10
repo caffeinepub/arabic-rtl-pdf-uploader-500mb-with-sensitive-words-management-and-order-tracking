@@ -39,7 +39,6 @@ export default function OrderTrackingSection() {
   const updateMutation = useUpdateOrder();
   const deleteMutation = useDeleteOrder();
 
-  // Convert orders array to array with IDs
   const orders: OrderWithId[] = ordersArray.map((order, index) => ({
     ...order,
     id: index,
@@ -47,7 +46,6 @@ export default function OrderTrackingSection() {
 
   const { dueReminder, dismissReminder } = useReminderScheduler(orders);
 
-  // Cleanup on unmount
   useEffect(() => {
     return () => {
       try {
@@ -58,7 +56,6 @@ export default function OrderTrackingSection() {
     };
   }, []);
 
-  // Check notification permission with defensive guards
   useEffect(() => {
     try {
       if (typeof window !== 'undefined' && 'Notification' in window) {
@@ -73,17 +70,15 @@ export default function OrderTrackingSection() {
 
   const requestNotificationPermission = async () => {
     try {
-      // Guard: Check if Notification API exists
       if (typeof window === 'undefined' || !('Notification' in window)) {
         console.warn('[OrderTracking] Notification API not available');
-        toast.error('المتصفح لا يدعم الإشعارات');
+        toast.error('Browser does not support notifications');
         return;
       }
 
-      // Guard: Check if requestPermission exists
       if (typeof Notification.requestPermission !== 'function') {
         console.warn('[OrderTracking] Notification.requestPermission not available');
-        toast.error('المتصفح لا يدعم طلب إذن الإشعارات');
+        toast.error('Browser does not support notification permission request');
         return;
       }
 
@@ -91,17 +86,17 @@ export default function OrderTrackingSection() {
       
       if (permission === 'granted') {
         setNotificationsEnabled(true);
-        toast.success('تم تفعيل الإشعارات');
+        toast.success('Notifications enabled');
       } else if (permission === 'denied') {
         console.log('[OrderTracking] Notification permission denied by user');
-        toast.error('تم رفض إذن الإشعارات');
+        toast.error('Notification permission denied');
       } else {
         console.log('[OrderTracking] Notification permission dismissed');
-        toast.info('لم يتم منح إذن الإشعارات');
+        toast.info('Notification permission not granted');
       }
     } catch (error) {
       console.error('[OrderTracking] Error requesting notification permission:', error);
-      toast.error('حدث خطأ أثناء طلب إذن الإشعارات');
+      toast.error('Error requesting notification permission');
     }
   };
 
@@ -131,7 +126,6 @@ export default function OrderTrackingSection() {
   const handleCloseForm = () => {
     setIsFormOpen(false);
     resetForm();
-    // Ensure cleanup after close
     setTimeout(() => {
       try {
         cleanupModalSideEffects();
@@ -145,21 +139,21 @@ export default function OrderTrackingSection() {
     e.preventDefault();
 
     if (!formData.orderNumber.trim() || !formData.bookTitle.trim()) {
-      toast.error('يرجى إدخال رقم الطلب وعنوان الكتاب');
+      toast.error('Please enter order number and book title');
       return;
     }
 
     try {
       if (editingOrder) {
         await updateMutation.mutateAsync({ id: BigInt(editingOrder.id), order: formData });
-        toast.success('تم تحديث الطلب بنجاح');
+        toast.success('Order updated successfully');
       } else {
         await createMutation.mutateAsync(formData);
-        toast.success('تم إضافة الطلب بنجاح');
+        toast.success('Order added successfully');
       }
       handleCloseForm();
     } catch (error) {
-      toast.error(editingOrder ? 'فشل تحديث الطلب' : 'فشل إضافة الطلب');
+      toast.error(editingOrder ? 'Failed to update order' : 'Failed to add order');
       console.error(error);
     }
   };
@@ -169,9 +163,8 @@ export default function OrderTrackingSection() {
 
     try {
       await deleteMutation.mutateAsync(BigInt(deletingId));
-      toast.success('تم حذف الطلب بنجاح');
+      toast.success('Order deleted successfully');
       setDeletingId(null);
-      // Ensure cleanup after delete
       setTimeout(() => {
         try {
           cleanupModalSideEffects();
@@ -180,14 +173,13 @@ export default function OrderTrackingSection() {
         }
       }, 150);
     } catch (error) {
-      toast.error('فشل حذف الطلب');
+      toast.error('Failed to delete order');
       console.error(error);
     }
   };
 
   const handleCancelDelete = () => {
     setDeletingId(null);
-    // Ensure cleanup after cancel
     setTimeout(() => {
       try {
         cleanupModalSideEffects();
@@ -201,7 +193,7 @@ export default function OrderTrackingSection() {
     if (!dateStr) return '-';
     try {
       const date = new Date(dateStr);
-      return date.toLocaleDateString('ar-SA', {
+      return date.toLocaleDateString('en-US', {
         year: 'numeric',
         month: 'long',
         day: 'numeric',
@@ -213,16 +205,16 @@ export default function OrderTrackingSection() {
 
   return (
     <div className="space-y-6">
-      <Card>
-        <CardHeader>
-          <div className="flex items-center justify-between">
+      <Card className="rounded-xl border border-border shadow-sm">
+        <CardHeader className="pb-4">
+          <div className="flex items-center justify-between flex-wrap gap-4">
             <div>
-              <CardTitle className="flex items-center gap-2">
+              <CardTitle className="flex items-center gap-2 text-lg font-semibold">
                 <ClipboardList className="w-5 h-5" />
-                متابعة الطلبات
+                Order Tracking
               </CardTitle>
-              <CardDescription>
-                إدارة طلبات الكتب مع نظام تذكير تلقائي
+              <CardDescription className="text-sm">
+                Manage book orders with automatic reminder system
               </CardDescription>
             </div>
             <div className="flex gap-2">
@@ -230,15 +222,16 @@ export default function OrderTrackingSection() {
                 <Button
                   variant="outline"
                   onClick={requestNotificationPermission}
+                  size="sm"
                   className="gap-2"
                 >
                   <Bell className="w-4 h-4" />
-                  تفعيل الإشعارات
+                  <span className="hidden sm:inline">Enable Notifications</span>
                 </Button>
               )}
-              <Button onClick={handleOpenForm} className="gap-2">
+              <Button onClick={handleOpenForm} size="sm" className="gap-2">
                 <Plus className="w-4 h-4" />
-                طلب جديد
+                <span className="hidden sm:inline">New Order</span>
               </Button>
             </div>
           </div>
@@ -247,59 +240,61 @@ export default function OrderTrackingSection() {
           {notificationsEnabled && (
             <div className="mb-4 p-3 bg-accent/50 rounded-lg flex items-center gap-2 text-sm">
               <Bell className="w-4 h-4 text-accent-foreground" />
-              <span>الإشعارات مفعلة - سيتم تنبيهك عند حلول موعد التذكير</span>
+              <span>Notifications enabled - you will be alerted when reminders are due</span>
             </div>
           )}
 
           {isLoading ? (
-            <p className="text-center text-muted-foreground py-8">جاري التحميل...</p>
+            <p className="text-center text-muted-foreground py-8">Loading...</p>
           ) : orders.length === 0 ? (
-            <p className="text-center text-muted-foreground py-8">لا توجد طلبات محفوظة</p>
+            <p className="text-center text-muted-foreground py-8">No saved orders</p>
           ) : (
-            <div className="border rounded-lg overflow-x-auto">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead className="text-right">رقم الطلب</TableHead>
-                    <TableHead className="text-right">عنوان الكتاب</TableHead>
-                    <TableHead className="text-right">جهة التحويل</TableHead>
-                    <TableHead className="text-right">تاريخ التحويل</TableHead>
-                    <TableHead className="text-right">تاريخ التذكير</TableHead>
-                    <TableHead className="text-left w-[100px]">الإجراءات</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {orders.map((order) => (
-                    <TableRow key={order.id}>
-                      <TableCell className="font-medium">{order.orderNumber}</TableCell>
-                      <TableCell>{order.bookTitle}</TableCell>
-                      <TableCell>{order.transferEntity || '-'}</TableCell>
-                      <TableCell>{formatDate(order.transferDate)}</TableCell>
-                      <TableCell>{formatDate(order.reminderDate)}</TableCell>
-                      <TableCell>
-                        <div className="flex gap-1 justify-start">
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => handleEdit(order)}
-                            title="تعديل"
-                          >
-                            <Edit2 className="w-4 h-4" />
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => setDeletingId(order.id)}
-                            title="حذف"
-                          >
-                            <Trash2 className="w-4 h-4 text-destructive" />
-                          </Button>
-                        </div>
-                      </TableCell>
+            <div className="border rounded-lg overflow-hidden">
+              <div className="overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="text-right">Order Number</TableHead>
+                      <TableHead className="text-right">Book Title</TableHead>
+                      <TableHead className="text-right">Transfer Entity</TableHead>
+                      <TableHead className="text-right">Transfer Date</TableHead>
+                      <TableHead className="text-right">Reminder Date</TableHead>
+                      <TableHead className="text-left w-[100px]">Actions</TableHead>
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+                  </TableHeader>
+                  <TableBody>
+                    {orders.map((order) => (
+                      <TableRow key={order.id}>
+                        <TableCell className="font-medium">{order.orderNumber}</TableCell>
+                        <TableCell>{order.bookTitle}</TableCell>
+                        <TableCell>{order.transferEntity || '-'}</TableCell>
+                        <TableCell>{formatDate(order.transferDate)}</TableCell>
+                        <TableCell>{formatDate(order.reminderDate)}</TableCell>
+                        <TableCell>
+                          <div className="flex gap-1 justify-start">
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              onClick={() => handleEdit(order)}
+                              title="Edit"
+                            >
+                              <Edit2 className="w-4 h-4" />
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              onClick={() => setDeletingId(order.id)}
+                              title="Delete"
+                            >
+                              <Trash2 className="w-4 h-4 text-destructive" />
+                            </Button>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
             </div>
           )}
         </CardContent>
@@ -313,48 +308,48 @@ export default function OrderTrackingSection() {
       }}>
         <DialogContent className="sm:max-w-lg">
           <DialogHeader>
-            <DialogTitle>{editingOrder ? 'تعديل الطلب' : 'طلب جديد'}</DialogTitle>
+            <DialogTitle>{editingOrder ? 'Edit Order' : 'New Order'}</DialogTitle>
             <DialogDescription>
-              {editingOrder ? 'تحديث معلومات الطلب' : 'إضافة طلب جديد إلى النظام'}
+              {editingOrder ? 'Update order information' : 'Add a new order to the system'}
             </DialogDescription>
           </DialogHeader>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="orderNumber">رقم الطلب *</Label>
+              <Label htmlFor="orderNumber">Order Number *</Label>
               <Input
                 id="orderNumber"
                 value={formData.orderNumber}
                 onChange={(e) => setFormData({ ...formData, orderNumber: e.target.value })}
-                placeholder="أدخل رقم الطلب"
+                placeholder="Enter order number"
                 disabled={createMutation.isPending || updateMutation.isPending}
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="bookTitle">عنوان الكتاب *</Label>
+              <Label htmlFor="bookTitle">Book Title *</Label>
               <Input
                 id="bookTitle"
                 value={formData.bookTitle}
                 onChange={(e) => setFormData({ ...formData, bookTitle: e.target.value })}
-                placeholder="أدخل عنوان الكتاب"
+                placeholder="Enter book title"
                 disabled={createMutation.isPending || updateMutation.isPending}
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="transferEntity">جهة التحويل</Label>
+              <Label htmlFor="transferEntity">Transfer Entity</Label>
               <Input
                 id="transferEntity"
                 value={formData.transferEntity}
                 onChange={(e) => setFormData({ ...formData, transferEntity: e.target.value })}
-                placeholder="أدخل جهة التحويل"
+                placeholder="Enter transfer entity"
                 disabled={createMutation.isPending || updateMutation.isPending}
               />
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="transferDate">تاريخ التحويل</Label>
+                <Label htmlFor="transferDate">Transfer Date</Label>
                 <Input
                   id="transferDate"
                   type="date"
@@ -365,7 +360,7 @@ export default function OrderTrackingSection() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="reminderDate">تاريخ التذكير</Label>
+                <Label htmlFor="reminderDate">Reminder Date</Label>
                 <Input
                   id="reminderDate"
                   type="datetime-local"
@@ -377,12 +372,12 @@ export default function OrderTrackingSection() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="notes">ملاحظات</Label>
+              <Label htmlFor="notes">Notes</Label>
               <Textarea
                 id="notes"
                 value={formData.notes}
                 onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
-                placeholder="أدخل أي ملاحظات إضافية"
+                placeholder="Enter any additional notes"
                 rows={3}
                 disabled={createMutation.isPending || updateMutation.isPending}
               />
@@ -395,17 +390,17 @@ export default function OrderTrackingSection() {
                 onClick={handleCloseForm}
                 disabled={createMutation.isPending || updateMutation.isPending}
               >
-                إلغاء
+                Cancel
               </Button>
               <Button
                 type="submit"
                 disabled={createMutation.isPending || updateMutation.isPending}
               >
                 {createMutation.isPending || updateMutation.isPending
-                  ? 'جاري الحفظ...'
+                  ? 'Saving...'
                   : editingOrder
-                  ? 'تحديث'
-                  : 'إضافة'}
+                  ? 'Update'
+                  : 'Add'}
               </Button>
             </DialogFooter>
           </form>
@@ -420,21 +415,21 @@ export default function OrderTrackingSection() {
       }}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>تأكيد الحذف</AlertDialogTitle>
+            <AlertDialogTitle>Confirm Deletion</AlertDialogTitle>
             <AlertDialogDescription>
-              هل أنت متأكد من حذف هذا الطلب؟ لا يمكن التراجع عن هذا الإجراء.
+              Are you sure you want to delete this order? This action cannot be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel onClick={handleCancelDelete} disabled={deleteMutation.isPending}>
-              إلغاء
+              Cancel
             </AlertDialogCancel>
             <AlertDialogAction
               onClick={handleDelete}
               disabled={deleteMutation.isPending}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
-              {deleteMutation.isPending ? 'جاري الحذف...' : 'حذف'}
+              {deleteMutation.isPending ? 'Deleting...' : 'Delete'}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -451,3 +446,4 @@ export default function OrderTrackingSection() {
     </div>
   );
 }
+

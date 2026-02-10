@@ -1,12 +1,12 @@
 # Specification
 
 ## Summary
-**Goal:** Fix the blank/empty screen that occurs when navigating to the "Order Tracking" (متابعة الطلبات) tab, ensuring the Orders view renders reliably and remains interactive.
+**Goal:** Restyle the existing RTL single-page app UI to match the provided WhatsApp screenshot’s layout and visual styling, without changing features or navigation.
 
 **Planned changes:**
-- Reproduce and identify the exact runtime error/UI lock-up causing the blank screen when opening the Order Tracking tab.
-- Implement a frontend fix so the Orders view consistently renders after tab navigation without uncaught console exceptions.
-- Harden reminder-related code paths in Order Tracking by adding defensive error handling (try/catch + logging) around Notification creation and any storage access used during reminder checks.
-- Ensure that if an Orders-tab runtime error still occurs, the existing global error boundary fallback displays instead of a blank screen.
+- Restyle the global app shell (page background, compact top bar/header, and centered content container with generous whitespace) to match the screenshot while keeping RTL enabled at the root.
+- Update the existing tab navigation to a pill/segmented style (rounded tabs, subtle border, clear active state) while preserving destinations, keyboard accessibility, and behavior; apply styles via wrappers/className only (no edits to `frontend/src/components/ui` sources).
+- Restyle the PDF Upload screen to include a prominent upload card with a large dashed drop-zone, centered icon + brief instructions + primary CTA button; keep all current PDF validation and upload/scan behaviors; keep scan results in a separate, clearly delineated section/card.
+- Align card styling across PDF Upload, Sensitive Words, and Order Tracking (consistent padding, soft border/radius/shadow, consistent spacing) while maintaining RTL readability and responsive layout.
 
-**User-visible outcome:** Users can click the "Order Tracking" tab from a fresh load and consistently see the Order Tracking UI (even when Notifications are blocked/unsupported), without the app turning into a blank screen.
+**User-visible outcome:** The app visually matches the provided screenshot with a cleaner centered layout, pill-style tabs, and a modern upload drop-zone card—while all existing functionality across PDF Upload, Sensitive Words, and Order Tracking remains unchanged.

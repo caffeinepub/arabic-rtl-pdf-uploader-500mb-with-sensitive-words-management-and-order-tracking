@@ -44,43 +44,44 @@ export default function App() {
     <div className="min-h-screen bg-background" dir="rtl">
       <Toaster position="top-center" />
       
-      {/* Header */}
-      <header className="border-b border-border bg-card">
-        <div className="container mx-auto px-4 py-4">
+      {/* Compact Header */}
+      <header className="border-b border-border bg-card/80 backdrop-blur-sm sticky top-0 z-50">
+        <div className="container mx-auto px-6 py-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-primary flex items-center justify-center">
-                <FileText className="w-6 h-6 text-primary-foreground" />
+              <div className="w-9 h-9 rounded-lg bg-primary flex items-center justify-center">
+                <FileText className="w-5 h-5 text-primary-foreground" />
               </div>
               <div>
-                <h1 className="text-xl font-bold text-foreground">نظام إدارة الملفات والطلبات</h1>
-                <p className="text-sm text-muted-foreground">إدارة شاملة للمستندات والكلمات الحساسة والطلبات</p>
+                <h1 className="text-lg font-semibold text-foreground">PDF Package</h1>
+                <p className="text-xs text-muted-foreground">Secure file management system</p>
               </div>
             </div>
             
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-3">
               {isAuthenticated && userProfile && (
-                <div className="text-sm text-muted-foreground">
-                  مرحباً، <span className="font-semibold text-foreground">{userProfile.name}</span>
+                <div className="text-sm text-muted-foreground hidden sm:block">
+                  Welcome, <span className="font-medium text-foreground">{userProfile.name}</span>
                 </div>
               )}
               <Button
                 onClick={handleAuth}
                 disabled={isLoggingIn}
                 variant={isAuthenticated ? 'outline' : 'default'}
+                size="sm"
                 className="gap-2"
               >
                 {isLoggingIn ? (
-                  'جاري تسجيل الدخول...'
+                  'Logging in...'
                 ) : isAuthenticated ? (
                   <>
                     <LogOut className="w-4 h-4" />
-                    تسجيل الخروج
+                    <span className="hidden sm:inline">Logout</span>
                   </>
                 ) : (
                   <>
                     <LogIn className="w-4 h-4" />
-                    تسجيل الدخول
+                    <span className="hidden sm:inline">Login</span>
                   </>
                 )}
               </Button>
@@ -89,27 +90,39 @@ export default function App() {
         </div>
       </header>
 
-      {/* Main Content - Wrapped with Error Boundary */}
-      <main className="container mx-auto px-4 py-8">
+      {/* Main Content - Centered with max-width */}
+      <main className="container mx-auto px-4 py-6 max-w-5xl">
         <LoginGate>
           <ProfileSetupDialog open={showProfileSetup} />
           
           <AppErrorBoundary>
             <Tabs defaultValue="pdf" className="w-full" dir="rtl">
-              <TabsList className="grid w-full grid-cols-3 mb-8">
-                <TabsTrigger value="pdf" className="gap-2">
-                  <FileText className="w-4 h-4" />
-                  رفع ملفات PDF
-                </TabsTrigger>
-                <TabsTrigger value="words" className="gap-2">
-                  <Shield className="w-4 h-4" />
-                  الكلمات الحساسة
-                </TabsTrigger>
-                <TabsTrigger value="orders" className="gap-2">
-                  <ClipboardList className="w-4 h-4" />
-                  متابعة الطلبات
-                </TabsTrigger>
-              </TabsList>
+              {/* Pill-style Tab Navigation */}
+              <div className="flex justify-center mb-6">
+                <TabsList className="inline-flex h-11 items-center justify-center rounded-full bg-muted p-1 text-muted-foreground">
+                  <TabsTrigger 
+                    value="pdf" 
+                    className="inline-flex items-center justify-center whitespace-nowrap rounded-full px-6 py-2 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm gap-2"
+                  >
+                    <FileText className="w-4 h-4" />
+                    PDF Upload
+                  </TabsTrigger>
+                  <TabsTrigger 
+                    value="words" 
+                    className="inline-flex items-center justify-center whitespace-nowrap rounded-full px-6 py-2 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm gap-2"
+                  >
+                    <Shield className="w-4 h-4" />
+                    Sensitive Words
+                  </TabsTrigger>
+                  <TabsTrigger 
+                    value="orders" 
+                    className="inline-flex items-center justify-center whitespace-nowrap rounded-full px-6 py-2 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm gap-2"
+                  >
+                    <ClipboardList className="w-4 h-4" />
+                    Order Tracking
+                  </TabsTrigger>
+                </TabsList>
+              </div>
 
               <TabsContent value="pdf">
                 <PdfUploadSection />
@@ -128,12 +141,12 @@ export default function App() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-border bg-card mt-16">
-        <div className="container mx-auto px-4 py-6">
+      <footer className="border-t border-border bg-card/50 mt-12">
+        <div className="container mx-auto px-4 py-4">
           <div className="text-center text-sm text-muted-foreground">
-            © 2026. بُني بـ <Heart className="inline w-4 h-4 text-destructive fill-destructive" /> باستخدام{' '}
+            © {new Date().getFullYear()}. Built with <Heart className="inline w-3.5 h-3.5 text-destructive fill-destructive" /> using{' '}
             <a 
-              href="https://caffeine.ai" 
+              href={`https://caffeine.ai/?utm_source=Caffeine-footer&utm_medium=referral&utm_content=${encodeURIComponent(typeof window !== 'undefined' ? window.location.hostname : 'pdf-package')}`}
               target="_blank" 
               rel="noopener noreferrer"
               className="text-primary hover:underline font-medium"
@@ -146,3 +159,4 @@ export default function App() {
     </div>
   );
 }
+

@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 11,
+  "projectStateVersion": 13,
   "summary": "تطبيق عربي لرفع ملفات PDF كبيرة (500MB+) مع إدارة الكلمات الحساسة (إضافة/تعديل/حذف وإظهار/إخفاء) وقسم \"متابعة الطلبات\" لإدخال بيانات الطلب وتنبيه منبثق على الكمبيوتر عند تاريخ التذكير.",
   "architectural_notes": [
     "ملاحظة توافق المتصفح/العرض: يجب أن تكون النوافذ المنبثقة (modals) وطبقات الـ overlay متوافقة مع Chrome وأن تتجنب أنماط/خصائص CSS قد تسبب blank screen (مثل مشاكل z-index/position/fixed/transform/overflow أو الاعتماد على GPU rendering)."
@@ -153,6 +153,38 @@
       "title": "Harden Order Tracking reminder-related code paths so that browser APIs cannot crash rendering: ensure Notification creation and any storage access performed during reminder checks cannot throw uncaught exceptions, and add defensive try/catch + logging where needed.",
       "reqIds": [
         "REQ-20"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-restyle-the-global-app-shell-header-page-background-content-container-to-visually-match-the-provided-screenshot-a-clean-light-background-a-compact-top-bar-and-a-centered-content-area-with-generous-whitespace-while-preserving-rtl-layout-behavior",
+      "title": "Restyle the global app shell (header + page background + content container) to visually match the provided screenshot: a clean light background, a compact top bar, and a centered content area with generous whitespace, while preserving RTL layout behavior.",
+      "reqIds": [
+        "REQ-21"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-tab-navigation-styling-to-match-the-screenshot-s-pill-style-segmented-navigation-rounded-tabs-subtle-border-clear-active-state-without-changing-the-existing-tab-destinations-or-functionality",
+      "title": "Update the tab navigation styling to match the screenshot’s pill-style segmented navigation (rounded tabs, subtle border, clear active state), without changing the existing tab destinations or functionality.",
+      "reqIds": [
+        "REQ-22"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-restyle-the-pdf-upload-screen-to-match-the-screenshot-a-prominent-upload-card-with-a-large-dashed-drop-zone-centered-iconography-and-a-primary-call-to-action-button-while-keeping-all-existing-upload-scanning-capabilities-and-keeping-scan-results-in-a-separate-clearly-delineated-area-not-replacing-the-upload-ui",
+      "title": "Restyle the PDF Upload screen to match the screenshot: a prominent upload card with a large dashed drop-zone, centered iconography, and a primary call-to-action button, while keeping all existing upload/scanning capabilities and keeping scan results in a separate, clearly delineated area (not replacing the upload UI).",
+      "reqIds": [
+        "REQ-23"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-align-cards-borders-radius-and-shadow-styling-across-all-three-sections-pdf-upload-sensitive-words-order-tracking-to-match-the-screenshot-s-soft-card-appearance-and-consistent-spacing-without-introducing-new-product-features",
+      "title": "Align cards, borders, radius, and shadow styling across all three sections (PDF Upload, Sensitive Words, Order Tracking) to match the screenshot’s soft card appearance and consistent spacing, without introducing new product features.",
+      "reqIds": [
+        "REQ-24"
       ],
       "version": 1
     }

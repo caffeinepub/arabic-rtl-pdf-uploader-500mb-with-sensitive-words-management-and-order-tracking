@@ -1,52 +1,104 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Fix Orders tab blank screen by hardening reminder/notification code and ensuring error boundary coverage",
+  "title": "WhatsApp-style UI restyle (RTL) for app shell, tabs, and sections",
   "requirements": [
     {
-      "id": "REQ-19",
-      "summary": "Identify and fix the runtime error/lock-up triggered when navigating to the Order Tracking tab so the Orders view reliably renders and stays interactive, with errors routed through the global error boundary instead of a blank screen.",
+      "id": "REQ-21",
+      "summary": "Restyle global app shell (light background, compact header, centered content) while preserving RTL behavior",
       "acceptanceCriteria": [
-        "From a fresh load, clicking the \"Order Tracking\" tab consistently displays the Order Tracking UI and does not result in a blank/empty screen.",
-        "No uncaught exceptions are thrown in the browser console when switching to the Orders tab.",
-        "If an error occurs in the Orders tab at runtime, the app shows the existing global error boundary fallback instead of a blank screen."
+        "The app background uses a light, neutral tone similar to the screenshot and the main content appears centered with comfortable spacing on desktop widths.",
+        "Header height/spacing is compact and consistent across all tabs (PDF Upload, Sensitive Words, Order Tracking).",
+        "RTL remains enabled at the app root and all layouts continue to render correctly in RTL."
       ],
       "file_operations": [
         {
           "path": "frontend/src/App.tsx",
           "operation": "modify",
-          "description": "Wrap the application shell (tabs + content) with the existing AppErrorBoundary so any render-time error originating from OrderTrackingSection (or other tabs) renders the boundary fallback rather than leaving the UI blank. Keep tab wiring intact and do not modify read-only UI components under frontend/src/components/ui."
+          "description": "Update the global shell layout to better match the screenshot: compact top bar spacing/typography, a centered content column with max-width and generous whitespace, and consistent container padding across tabs while keeping dir=\"rtl\" at the root."
         },
         {
-          "path": "frontend/src/features/orders/OrderTrackingSection.tsx",
+          "path": "frontend/src/index.css",
           "operation": "modify",
-          "description": "Reproduce the blank-screen issue by navigating to the Orders tab, then adjust Orders-tab-specific effects/handlers to avoid throwing during initial render or tab activation (e.g., guard browser API access and avoid unhandled promise rejections). Add targeted console logging around Orders tab mount/reminder initialization to confirm the exact failure path is eliminated."
+          "description": "Adjust global theme tokens and base styles to achieve a clean light neutral background and soft surfaces that match the screenshot; keep RTL-friendly base typography and direction rules intact."
+        },
+        {
+          "path": "frontend/tailwind.config.js",
+          "operation": "modify",
+          "description": "If needed to match the screenshot precisely, refine Tailwind theme extensions (e.g., container widths, border radius, shadow presets, or semantic color tokens) used by the updated shell styles."
         }
       ]
     },
     {
-      "id": "REQ-20",
-      "summary": "Harden Order Tracking reminder and notification paths so browser APIs (Notifications/localStorage) cannot crash rendering; add defensive try/catch and logging while keeping reminders functional when supported.",
+      "id": "REQ-22",
+      "summary": "Restyle tab navigation to pill-style segmented control with clear active state, without changing functionality or editing shadcn/ui sources",
       "acceptanceCriteria": [
-        "If Notifications are blocked/unsupported/permission-denied, opening the Orders tab still renders normally and no blank screen occurs.",
-        "If the browser throws when attempting to construct a Notification, the error is caught and logged, and the Orders tab remains usable.",
-        "Reminder checks continue to function when supported, without causing render crashes."
+        "Tabs render as rounded/pill-like triggers with a clear selected state (background + text contrast) and subtle unselected styling.",
+        "Tab navigation remains keyboard-accessible and switching tabs does not break existing content rendering.",
+        "No changes are made to the underlying shadcn/ui component sources under `frontend/src/components/ui` (compose styles via className/wrappers only)."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/features/orders/useReminderScheduler.ts",
+          "path": "frontend/src/App.tsx",
           "operation": "modify",
-          "description": "Make reminder checks exception-safe: wrap Notification availability checks and Notification construction in defensive try/catch; ensure any errors from parsing dates, reading/writing localStorage, or scheduling intervals are caught and logged without breaking the effect. Ensure the interval callback cannot throw uncaught exceptions so Orders tab rendering remains stable."
+          "description": "Compose pill/segmented styling by adjusting className on TabsList and TabsTrigger (rounded container, subtle border, active state contrast) while keeping the same tab values/destinations and preserving keyboard accessibility. Do not modify any files under frontend/src/components/ui."
+        },
+        {
+          "path": "frontend/src/index.css",
+          "operation": "modify",
+          "description": "Add/adjust any global utility layer overrides needed for the pill tabs appearance (e.g., focus ring consistency in RTL) without touching shadcn/ui component source files."
+        }
+      ]
+    },
+    {
+      "id": "REQ-23",
+      "summary": "Restyle PDF Upload screen with a prominent upload card and large dashed drop-zone + primary CTA, keeping upload/scanning behaviors and separating scan results",
+      "acceptanceCriteria": [
+        "The upload area includes a large dashed border drop-zone with centered content (icon + brief instructions + action button) similar to the screenshot.",
+        "Existing behaviors remain intact: PDF-only validation, chunked upload progress, retry/resume behavior, and scan controls/results remain available.",
+        "Scan results still appear in a separate dedicated section/card and do not replace or hide the upload controls."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/features/pdf/PdfUploadSection.tsx",
+          "operation": "modify",
+          "description": "Restructure and restyle the upload UI to match the screenshot: a prominent Card, a larger dashed drop-zone with centered iconography/instructions, and a primary CTA button; keep the existing file input/validation, chunked upload progress, and scan controls. Ensure scan results remain rendered in a separate, clearly delineated Card below the upload card."
+        },
+        {
+          "path": "frontend/src/index.css",
+          "operation": "modify",
+          "description": "Add any global style refinements required by the updated upload drop-zone (e.g., consistent dashed border color, muted background tint, and focus/hover states) while keeping RTL base rules."
+        }
+      ]
+    },
+    {
+      "id": "REQ-24",
+      "summary": "Align card/border/radius/shadow styling and spacing across PDF Upload, Sensitive Words, and Order Tracking without adding new features",
+      "acceptanceCriteria": [
+        "Cards across sections have consistent border, radius, and shadow treatment (soft, minimal) and consistent internal padding.",
+        "Tables/forms maintain readability in RTL and remain responsive (no horizontal overflow at common mobile widths except where unavoidable for tables).",
+        "Any newly introduced user-facing text added during this restyling work is in English (existing Arabic text can remain unchanged)."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/features/pdf/PdfUploadSection.tsx",
+          "operation": "modify",
+          "description": "Apply consistent card spacing and soft surface styling (borders/radius/shadows/padding) to the upload card and scan results card; keep tables readable in RTL and avoid unnecessary horizontal overflow."
+        },
+        {
+          "path": "frontend/src/features/sensitiveWords/SensitiveWordsSection.tsx",
+          "operation": "modify",
+          "description": "Align both cards (add + list) to the same soft card styling and spacing as the screenshot; keep the words table responsive and readable in RTL (e.g., allow horizontal scroll only when unavoidable)."
         },
         {
           "path": "frontend/src/features/orders/OrderTrackingSection.tsx",
           "operation": "modify",
-          "description": "Harden notification permission flows: guard access to window.Notification and wrap Notification.requestPermission() in try/catch with logging + user-safe toasts so blocked/unsupported/permission-denied states cannot crash the Orders view. Ensure the tab remains usable even if Notification APIs throw."
+          "description": "Align the orders card, tables, and dialogs with the same soft card styling, consistent padding, and spacing; keep the orders table responsive (overflow-x-auto only at small widths) and ensure RTL readability remains intact."
         },
         {
-          "path": "frontend/src/utils/modalCleanup.ts",
+          "path": "frontend/src/index.css",
           "operation": "modify",
-          "description": "Add defensive try/catch guards around DOM style/attribute restoration operations (document/body/documentElement) with console logging so cleanup cannot throw in edge cases; keep behavior the same (no redesign), only prevent uncaught exceptions during Orders tab navigation/unmount."
+          "description": "Introduce/adjust shared styling conventions for cards/surfaces (e.g., consistent shadow strength, border color, radius token) so all three sections visually match and remain consistent across the app."
         }
       ]
     }

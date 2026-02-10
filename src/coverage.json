@@ -1,54 +1,87 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-09T05:32:00.302Z",
+  "generatedAt": "2026-02-10T07:15:17.556Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 2,
-    "implemented": 2,
+    "total": 4,
+    "implemented": 4,
     "items": [
       {
-        "id": "REQ-19",
-        "summary": "Reproduce the issue where clicking the \"Order Tracking\" (متابعة الطلبات) tab causes the app UI to become blank/empty, identify the exact runtime error or UI lock-up causing the blank screen, and implement a fix so the Orders view reliably renders and remains interactive after tab navigation.",
+        "id": "REQ-21",
+        "summary": "Restyle the global app shell (header + page background + content container) to visually match the provided screenshot: a clean light background, a compact top bar, and a centered content area with generous whitespace, while preserving RTL layout behavior.",
         "status": "implemented",
         "plannedFiles": [
           "frontend/src/App.tsx",
-          "frontend/src/features/orders/OrderTrackingSection.tsx"
+          "frontend/src/index.css",
+          "frontend/tailwind.config.js"
         ],
         "matchedFiles": [
           "frontend/src/App.tsx",
-          "frontend/src/features/orders/OrderTrackingSection.tsx"
+          "frontend/src/index.css",
+          "frontend/tailwind.config.js"
         ]
       },
       {
-        "id": "REQ-20",
-        "summary": "Harden Order Tracking reminder-related code paths so that browser APIs cannot crash rendering: ensure Notification creation and any storage access performed during reminder checks cannot throw uncaught exceptions, and add defensive try/catch + logging where needed.",
+        "id": "REQ-22",
+        "summary": "Update the tab navigation styling to match the screenshot’s pill-style segmented navigation (rounded tabs, subtle border, clear active state), without changing the existing tab destinations or functionality.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/features/orders/useReminderScheduler.ts",
-          "frontend/src/features/orders/OrderTrackingSection.tsx",
-          "frontend/src/utils/modalCleanup.ts"
+          "frontend/src/App.tsx",
+          "frontend/src/index.css"
         ],
         "matchedFiles": [
-          "frontend/src/features/orders/useReminderScheduler.ts",
+          "frontend/src/App.tsx",
+          "frontend/src/index.css"
+        ]
+      },
+      {
+        "id": "REQ-23",
+        "summary": "Restyle the PDF Upload screen to match the screenshot: a prominent upload card with a large dashed drop-zone, centered iconography, and a primary call-to-action button, while keeping all existing upload/scanning capabilities and keeping scan results in a separate, clearly delineated area (not replacing the upload UI).",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/features/pdf/PdfUploadSection.tsx",
+          "frontend/src/index.css"
+        ],
+        "matchedFiles": [
+          "frontend/src/features/pdf/PdfUploadSection.tsx",
+          "frontend/src/index.css"
+        ]
+      },
+      {
+        "id": "REQ-24",
+        "summary": "Align cards, borders, radius, and shadow styling across all three sections (PDF Upload, Sensitive Words, Order Tracking) to match the screenshot’s soft card appearance and consistent spacing, without introducing new product features.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/features/pdf/PdfUploadSection.tsx",
+          "frontend/src/features/sensitiveWords/SensitiveWordsSection.tsx",
           "frontend/src/features/orders/OrderTrackingSection.tsx",
-          "frontend/src/utils/modalCleanup.ts"
+          "frontend/src/index.css"
+        ],
+        "matchedFiles": [
+          "frontend/src/features/pdf/PdfUploadSection.tsx",
+          "frontend/src/features/sensitiveWords/SensitiveWordsSection.tsx",
+          "frontend/src/features/orders/OrderTrackingSection.tsx",
+          "frontend/src/index.css"
         ]
       }
     ]
   },
   "changedFiles": [
     "build-request.json",
+    "caffeine.lock.json",
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
     "frontend/src/App.tsx",
     "frontend/src/features/orders/OrderTrackingSection.tsx",
-    "frontend/src/features/orders/useReminderScheduler.ts",
-    "frontend/src/utils/modalCleanup.ts",
+    "frontend/src/features/pdf/PdfUploadSection.tsx",
+    "frontend/src/features/sensitiveWords/SensitiveWordsSection.tsx",
+    "frontend/src/index.css",
+    "frontend/tailwind.config.js",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

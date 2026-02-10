@@ -1,46 +1,46 @@
 {
   "kind": "spec_vs_diff_report",
   "version": "1.0",
-  "generatedAt": "2026-02-09T05:32:00.300Z",
-  "summary": "REQ-19/REQ-20 appear to be implemented via (1) wrapping tab content in an error boundary to prevent blank/empty screens on runtime errors, (2) defensive cleanup for modal side effects that can lock the UI, and (3) hardening reminder/notification/localStorage code paths with guards + try/catch so browser API failures don’t crash rendering. The diff summary also indicates several additional changes outside the requested scope (e.g., PDF upload, main entry point, new/updated error boundary UI), which were not explicitly requested.",
+  "generatedAt": "2026-02-10T07:15:17.553Z",
+  "summary": "Diff implements the requested UI restyle themes (light neutral background tokens, compact sticky header, centered container), adds pill-style tab CSS classes, and applies soft card styling in at least Sensitive Words (and likely other sections but some content is truncated). However, the diff also introduces several non-requested stability/feature changes (error boundary, PDF scanning utilities via PDF.js, notification permission logic, modal cleanup utilities, and backend hook behavior changes) which go beyond a pure UI/layout restyle.",
   "missing_requirements": [],
   "hallucinated_features": [
     {
-      "description": "Modified the application entry point (main.tsx) to wrap with a global error boundary.",
-      "reason": "BuildRequest only asks to fix the blank screen when opening the Order Tracking tab and harden reminder-related browser API usage; changing frontend/src/main.tsx is also explicitly disallowed by constraints.",
+      "description": "Introduced a global React error boundary and wrapped the app with it, adding a recovery screen behavior (non-UI-restyle feature/stability change).",
+      "reason": "BuildRequest is scoped to UI/layout restyling only and explicitly says to keep the existing feature set; adding new error boundary behavior is not requested.",
       "evidence": [
-        "frontend-file-summaries.txt (\"frontend/src/main.tsx\": \"Application entry point wrapped with global error boundary...\")"
+        "frontend/src/App.tsx",
+        "frontend-file-summaries.txt (mentions frontend/src/components/system/AppErrorBoundary.tsx and main.tsx wrapping)"
       ]
     },
     {
-      "description": "Introduced/updated a global AppErrorBoundary component with an English recovery screen and reload button.",
-      "reason": "Not requested by REQ-19/REQ-20 (they require using the existing global error boundary fallback rather than adding a new global UX).",
+      "description": "Added/introduced PDF scanning functionality via dynamic PDF.js loading utilities (pdfjsConfig/pdfScan) and integrated scanning into the PDF upload section.",
+      "reason": "BuildRequest says to keep existing upload/scanning capabilities and not change the upload/scanning protocol; adding new scanning implementation via PDF.js utilities appears to be new functionality beyond restyling.",
       "evidence": [
-        "frontend-file-summaries.txt (\"frontend/src/components/system/AppErrorBoundary.tsx\": \"Global React error boundary... English recovery screen...\")",
-        "frontend/src/App.tsx (imports and uses AppErrorBoundary; truncated)"
+        "frontend/src/features/pdf/PdfUploadSection.tsx (imports scanPdfForSensitiveWords, ScanResult)",
+        "frontend-file-summaries.txt (mentions frontend/src/features/pdf/pdfjsConfig.ts and frontend/src/features/pdf/pdfScan.ts)"
       ]
     },
     {
-      "description": "Made unrelated PDF upload changes (chunked upload behavior, debug logging, sensitive word scanning enhancements).",
-      "reason": "Non-goals specify not redesigning beyond what is needed to fix the blank-screen bug; REQ-19/REQ-20 are specific to the Orders/Order Tracking tab and reminder-related hardening.",
+      "description": "Added defensive modal cleanup utilities and hardened dialog lifecycle management to prevent blank screens.",
+      "reason": "Not requested by the UI restyle requirements; this is additional stability behavior unrelated to matching the screenshot layout/styling.",
       "evidence": [
-        "frontend-file-summaries.txt (\"frontend/src/features/pdf/PdfUploadSection.tsx\": \"...comprehensive debug logging... improved error handling... client-side sensitive word scanning...\")",
-        "frontend-file-summaries.txt (\"frontend/src/features/pdf/pdfScan.ts\": \"PDF scanning utility...\")",
-        "frontend-file-summaries.txt (\"frontend/src/features/pdf/pdfjsConfig.ts\": \"PDF.js configuration helper...\")"
+        "frontend/src/features/orders/OrderTrackingSection.tsx (imports cleanupModalSideEffects)",
+        "frontend-file-summaries.txt (mentions frontend/src/utils/modalCleanup.ts and dialog lifecycle hardening)"
       ]
     },
     {
-      "description": "Enhanced React Query hooks broadly (retry logic for PDF uploads, signature changes) beyond Orders tab stability.",
-      "reason": "REQ-19/REQ-20 do not request changes to general query hooks or PDF upload mutations; this expands scope beyond the Orders blank-screen fix.",
+      "description": "Added/expanded browser Notification permission request flow and related toasts/state handling in Order Tracking.",
+      "reason": "Not requested by UI restyle; changes application behavior around notifications beyond styling.",
       "evidence": [
-        "frontend-file-summaries.txt (\"frontend/src/hooks/useQueries.ts\": \"...enhanced error handling, debug logging, and retry logic for PDF uploads...\")"
+        "frontend/src/features/orders/OrderTrackingSection.tsx (Notification.permission checks and requestNotificationPermission logic)"
       ]
     },
     {
-      "description": "Changes to reminder dialog component lifecycle/cleanup (ReminderDialog hardening) beyond the explicitly requested areas (Orders reminder checks and Notification/storage access).",
-      "reason": "REQ-20 focuses on reminder checks and browser APIs not crashing rendering; modifying the dialog component itself is additional scope (even if related).",
+      "description": "Changed React Query hooks behavior for backend operations (enhanced retry logic/debug logging; upload mutation signature accepting blob+filename).",
+      "reason": "BuildRequest constraint: do not introduce new backend APIs or change backend data schemas; while not necessarily a schema change, this is a functional/data-layer change beyond UI restyle scope and may affect the upload protocol/behavior.",
       "evidence": [
-        "frontend-file-summaries.txt (\"frontend/src/components/reminders/ReminderDialog.tsx\": \"Reminder modal dialog with hardened open/close handling...\")"
+        "frontend-file-summaries.txt (mentions frontend/src/hooks/useQueries.ts changes)"
       ]
     }
   ],
@@ -49,8 +49,10 @@
     "frontend-file-summaries.txt",
     "frontend/src/App.tsx",
     "frontend/src/features/orders/OrderTrackingSection.tsx",
-    "frontend/src/features/orders/useReminderScheduler.ts",
-    "frontend/src/utils/modalCleanup.ts",
+    "frontend/src/features/pdf/PdfUploadSection.tsx",
+    "frontend/src/features/sensitiveWords/SensitiveWordsSection.tsx",
+    "frontend/src/index.css",
+    "frontend/tailwind.config.js",
     "project_state.json"
   ]
 }

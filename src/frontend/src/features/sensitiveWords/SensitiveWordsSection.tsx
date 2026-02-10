@@ -26,7 +26,7 @@ export default function SensitiveWordsSection() {
 
   const handleAdd = async () => {
     if (!inputText.trim()) {
-      toast.error('يرجى إدخال كلمة أو أكثر');
+      toast.error('Please enter at least one word');
       return;
     }
 
@@ -36,7 +36,7 @@ export default function SensitiveWordsSection() {
       .filter(w => w.length > 0);
 
     if (wordsToAdd.length === 0) {
-      toast.error('يرجى إدخال كلمة صحيحة');
+      toast.error('Please enter valid words');
       return;
     }
 
@@ -44,10 +44,10 @@ export default function SensitiveWordsSection() {
       for (const word of wordsToAdd) {
         await saveMutation.mutateAsync(word);
       }
-      toast.success(`تم إضافة ${wordsToAdd.length} كلمة بنجاح`);
+      toast.success(`Added ${wordsToAdd.length} word(s) successfully`);
       setInputText('');
     } catch (error) {
-      toast.error('فشل إضافة الكلمات');
+      toast.error('Failed to add words');
       console.error(error);
     }
   };
@@ -59,17 +59,17 @@ export default function SensitiveWordsSection() {
 
   const handleUpdate = async () => {
     if (!editingWord || !editValue.trim()) {
-      toast.error('يرجى إدخال كلمة صحيحة');
+      toast.error('Please enter a valid word');
       return;
     }
 
     try {
       await updateMutation.mutateAsync({ id: editingWord.id, word: editValue.trim() });
-      toast.success('تم تحديث الكلمة بنجاح');
+      toast.success('Word updated successfully');
       setEditingWord(null);
       setEditValue('');
     } catch (error) {
-      toast.error('فشل تحديث الكلمة');
+      toast.error('Failed to update word');
       console.error(error);
     }
   };
@@ -79,10 +79,10 @@ export default function SensitiveWordsSection() {
 
     try {
       await removeMutation.mutateAsync(deletingId);
-      toast.success('تم حذف الكلمة بنجاح');
+      toast.success('Word deleted successfully');
       setDeletingId(null);
     } catch (error) {
-      toast.error('فشل حذف الكلمة');
+      toast.error('Failed to delete word');
       console.error(error);
     }
   };
@@ -93,29 +93,31 @@ export default function SensitiveWordsSection() {
 
   return (
     <div className="space-y-6">
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
+      {/* Add Words Card */}
+      <Card className="rounded-xl border border-border shadow-sm">
+        <CardHeader className="pb-4">
+          <CardTitle className="flex items-center gap-2 text-lg font-semibold">
             <Shield className="w-5 h-5" />
-            الكلمات الحساسة
+            Sensitive Words
           </CardTitle>
-          <CardDescription>
-            إدارة الكلمات والعبارات الحساسة مع إمكانية الإضافة والتعديل والحذف
+          <CardDescription className="text-sm">
+            Manage sensitive words and phrases with add, edit, and delete capabilities
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="words-input">إضافة كلمات حساسة</Label>
+            <Label htmlFor="words-input">Add Sensitive Words</Label>
             <Textarea
               id="words-input"
               value={inputText}
               onChange={(e) => setInputText(e.target.value)}
-              placeholder="أدخل كلمة أو أكثر (افصل بينها بفاصلة أو سطر جديد)"
+              placeholder="Enter one or more words (separate with comma or new line)"
               rows={4}
               disabled={saveMutation.isPending}
+              className="resize-none"
             />
             <p className="text-sm text-muted-foreground">
-              يمكنك إدخال كلمة واحدة أو عدة كلمات مفصولة بفاصلة (،) أو سطر جديد
+              You can enter a single word or multiple words separated by comma (,) or new line
             </p>
           </div>
 
@@ -123,83 +125,84 @@ export default function SensitiveWordsSection() {
             onClick={handleAdd}
             disabled={saveMutation.isPending || !inputText.trim()}
             className="gap-2"
+            size="lg"
           >
             <Plus className="w-4 h-4" />
-            {saveMutation.isPending ? 'جاري الإضافة...' : 'إضافة'}
+            {saveMutation.isPending ? 'Adding...' : 'Add Words'}
           </Button>
         </CardContent>
       </Card>
 
-      <Card>
-        <CardHeader>
+      {/* Words List Card */}
+      <Card className="rounded-xl border border-border shadow-sm">
+        <CardHeader className="pb-4">
           <div className="flex items-center justify-between">
             <div>
-              <CardTitle>قائمة الكلمات الحساسة</CardTitle>
-              <CardDescription>
-                {words.length} كلمة محفوظة
+              <CardTitle className="text-lg font-semibold">Saved Words</CardTitle>
+              <CardDescription className="text-sm">
+                {words.length} word(s) saved
               </CardDescription>
             </div>
             <div className="flex items-center gap-2">
-              <Label htmlFor="visibility-toggle" className="cursor-pointer">
-                {isVisible ? 'إخفاء' : 'إظهار'}
+              <Label htmlFor="visibility-toggle" className="text-sm cursor-pointer">
+                {isVisible ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
               </Label>
               <Switch
                 id="visibility-toggle"
                 checked={isVisible}
                 onCheckedChange={setIsVisible}
               />
-              {isVisible ? (
-                <Eye className="w-4 h-4 text-muted-foreground" />
-              ) : (
-                <EyeOff className="w-4 h-4 text-muted-foreground" />
-              )}
             </div>
           </div>
         </CardHeader>
         <CardContent>
           {isLoading ? (
-            <p className="text-center text-muted-foreground py-8">جاري التحميل...</p>
+            <p className="text-center text-muted-foreground py-8">Loading...</p>
           ) : words.length === 0 ? (
-            <p className="text-center text-muted-foreground py-8">لا توجد كلمات حساسة محفوظة</p>
+            <p className="text-center text-muted-foreground py-8">No saved words</p>
           ) : (
-            <div className="border rounded-lg">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead className="text-right">الكلمة</TableHead>
-                    <TableHead className="text-left w-[100px]">الإجراءات</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {words.map(([id, word]) => (
-                    <TableRow key={id.toString()}>
-                      <TableCell className="font-medium">
-                        {isVisible ? word : maskWord(word)}
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex gap-1 justify-start">
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => handleEdit(id, word)}
-                            disabled={updateMutation.isPending || removeMutation.isPending}
-                          >
-                            <Edit2 className="w-4 h-4" />
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => setDeletingId(id)}
-                            disabled={updateMutation.isPending || removeMutation.isPending}
-                          >
-                            <Trash2 className="w-4 h-4 text-destructive" />
-                          </Button>
-                        </div>
-                      </TableCell>
+            <div className="border rounded-lg overflow-hidden">
+              <div className="overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="text-right w-[60px]">#</TableHead>
+                      <TableHead className="text-right">Word/Phrase</TableHead>
+                      <TableHead className="text-left w-[100px]">Actions</TableHead>
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+                  </TableHeader>
+                  <TableBody>
+                    {words.map(([id, word], index) => (
+                      <TableRow key={id.toString()}>
+                        <TableCell className="text-muted-foreground">{index + 1}</TableCell>
+                        <TableCell className="font-medium">
+                          {isVisible ? word : maskWord(word)}
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex gap-1 justify-start">
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              onClick={() => handleEdit(id, word)}
+                              title="Edit"
+                            >
+                              <Edit2 className="w-4 h-4" />
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              onClick={() => setDeletingId(id)}
+                              title="Delete"
+                            >
+                              <Trash2 className="w-4 h-4 text-destructive" />
+                            </Button>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
             </div>
           )}
         </CardContent>
@@ -207,20 +210,21 @@ export default function SensitiveWordsSection() {
 
       {/* Edit Dialog */}
       <Dialog open={!!editingWord} onOpenChange={(open) => !open && setEditingWord(null)}>
-        <DialogContent>
+        <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>تعديل الكلمة</DialogTitle>
+            <DialogTitle>Edit Word</DialogTitle>
             <DialogDescription>
-              قم بتعديل الكلمة الحساسة
+              Update the sensitive word or phrase
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-4">
             <div className="space-y-2">
-              <Label htmlFor="edit-word">الكلمة</Label>
+              <Label htmlFor="edit-word">Word/Phrase</Label>
               <Input
                 id="edit-word"
                 value={editValue}
                 onChange={(e) => setEditValue(e.target.value)}
+                placeholder="Enter word or phrase"
                 disabled={updateMutation.isPending}
               />
             </div>
@@ -231,37 +235,37 @@ export default function SensitiveWordsSection() {
               onClick={() => setEditingWord(null)}
               disabled={updateMutation.isPending}
             >
-              إلغاء
+              Cancel
             </Button>
             <Button
               onClick={handleUpdate}
               disabled={updateMutation.isPending || !editValue.trim()}
             >
-              {updateMutation.isPending ? 'جاري الحفظ...' : 'حفظ'}
+              {updateMutation.isPending ? 'Updating...' : 'Update'}
             </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
 
-      {/* Delete Confirmation */}
-      <AlertDialog open={!!deletingId} onOpenChange={(open) => !open && setDeletingId(null)}>
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={deletingId !== null} onOpenChange={(open) => !open && setDeletingId(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>تأكيد الحذف</AlertDialogTitle>
+            <AlertDialogTitle>Confirm Deletion</AlertDialogTitle>
             <AlertDialogDescription>
-              هل أنت متأكد من حذف هذه الكلمة؟ لا يمكن التراجع عن هذا الإجراء.
+              Are you sure you want to delete this word? This action cannot be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel disabled={removeMutation.isPending}>
-              إلغاء
+              Cancel
             </AlertDialogCancel>
             <AlertDialogAction
               onClick={handleDelete}
               disabled={removeMutation.isPending}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
-              {removeMutation.isPending ? 'جاري الحذف...' : 'حذف'}
+              {removeMutation.isPending ? 'Deleting...' : 'Delete'}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -269,3 +273,4 @@ export default function SensitiveWordsSection() {
     </div>
   );
 }
+

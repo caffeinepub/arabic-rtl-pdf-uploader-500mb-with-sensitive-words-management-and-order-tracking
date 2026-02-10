@@ -57,10 +57,6 @@ export default function PdfUploadSection() {
     setUploadProgress(0);
 
     try {
-      // Root cause identified: The backend expects both blob AND filename parameters.
-      // Previous code only passed the blob, causing the upload to fail.
-      // Additionally, we now use ExternalBlob.fromURL for chunked upload without loading full file into RAM.
-      
       console.log('[PdfUploadSection] Creating blob URL for chunked upload');
       const blobUrl = URL.createObjectURL(selectedFile);
       
@@ -71,7 +67,6 @@ export default function PdfUploadSection() {
 
       console.log('[PdfUploadSection] Calling backend uploadSensitiveFile with filename:', selectedFile.name);
       
-      // Fixed: Pass both blob and filename to match backend signature
       await uploadMutation.mutateAsync({ 
         blob, 
         filename: selectedFile.name 
@@ -79,7 +74,6 @@ export default function PdfUploadSection() {
       
       console.log('[PdfUploadSection] Upload completed successfully');
       
-      // Clean up blob URL
       URL.revokeObjectURL(blobUrl);
       
       toast.success('File uploaded successfully');
@@ -96,7 +90,6 @@ export default function PdfUploadSection() {
         error
       });
       
-      // Improved error handling with specific messages
       let errorMessage = 'Upload failed';
       
       if (error?.message?.includes('Unauthorized') || error?.message?.includes('permission')) {
@@ -132,7 +125,6 @@ export default function PdfUploadSection() {
     setScanProgress(0);
     setScanResult(null);
 
-    // Create abort controller for cancellation
     abortControllerRef.current = new AbortController();
 
     try {
@@ -204,25 +196,17 @@ export default function PdfUploadSection() {
 
   return (
     <div className="space-y-6">
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Upload className="w-5 h-5" />
-            Upload PDF Files
-          </CardTitle>
-          <CardDescription>
-            You can upload PDF files up to 500 MB or more
+      {/* Upload Card */}
+      <Card className="rounded-xl border border-border shadow-sm">
+        <CardHeader className="pb-4">
+          <CardTitle className="text-lg font-semibold">Upload PDF File</CardTitle>
+          <CardDescription className="text-sm">
+            Upload PDF files up to 500 MB or more. Files are uploaded securely in chunks.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          <Alert>
-            <AlertCircle className="h-4 w-4" />
-            <AlertDescription>
-              Large files are uploaded in chunks to ensure success. The process may take some time depending on file size.
-            </AlertDescription>
-          </Alert>
-
-          <div className="border-2 border-dashed border-border rounded-lg p-8 text-center">
+          {/* Large Dashed Drop Zone */}
+          <div className="border-2 border-dashed border-border rounded-xl p-12 text-center bg-muted/30 hover:bg-muted/50 transition-colors">
             <input
               ref={fileInputRef}
               type="file"
@@ -235,23 +219,25 @@ export default function PdfUploadSection() {
             
             {!selectedFile ? (
               <label htmlFor="pdf-upload" className="cursor-pointer block">
-                <div className="mx-auto w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mb-4">
-                  <FileText className="w-8 h-8 text-primary" />
+                <div className="mx-auto w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center mb-4">
+                  <FileText className="w-10 h-10 text-primary" />
                 </div>
-                <p className="text-lg font-medium mb-2">Choose PDF File</p>
-                <p className="text-sm text-muted-foreground mb-4">
-                  Or drag and drop it here
+                <p className="text-base font-medium mb-2">Choose PDF File</p>
+                <p className="text-sm text-muted-foreground mb-6">
+                  Click to browse or drag and drop your file here<br />
+                  Supports files up to 500 MB
                 </p>
-                <Button type="button" variant="outline">
-                  Browse Files
+                <Button type="button" size="lg" className="gap-2">
+                  <Upload className="w-4 h-4" />
+                  Choose File
                 </Button>
               </label>
             ) : (
               <div className="space-y-4">
-                <div className="flex items-center justify-center gap-3 p-4 bg-muted rounded-lg">
-                  <FileText className="w-8 h-8 text-primary" />
-                  <div className="flex-1 text-right">
-                    <p className="font-medium">{selectedFile.name}</p>
+                <div className="flex items-center justify-center gap-3 p-4 bg-background rounded-lg border border-border">
+                  <FileText className="w-8 h-8 text-primary flex-shrink-0" />
+                  <div className="flex-1 text-right min-w-0">
+                    <p className="font-medium truncate">{selectedFile.name}</p>
                     <p className="text-sm text-muted-foreground">
                       {formatFileSize(selectedFile.size)}
                     </p>
@@ -261,6 +247,7 @@ export default function PdfUploadSection() {
                       variant="ghost"
                       size="icon"
                       onClick={handleCancel}
+                      className="flex-shrink-0"
                     >
                       <X className="w-4 h-4" />
                     </Button>
@@ -287,21 +274,19 @@ export default function PdfUploadSection() {
 
                 {!isUploading && !isScanning && (
                   <div className="flex gap-2 justify-center flex-wrap">
-                    <Button onClick={handleUpload} className="gap-2">
+                    <Button onClick={handleUpload} size="lg" className="gap-2">
                       <Upload className="w-4 h-4" />
                       Upload File
                     </Button>
                     <Button 
                       onClick={handleScan} 
                       variant="secondary" 
+                      size="lg"
                       className="gap-2"
                       disabled={sensitiveWords.length === 0}
                     >
                       <Search className="w-4 h-4" />
                       Scan for Sensitive Words
-                    </Button>
-                    <Button variant="outline" onClick={handleCancel}>
-                      Cancel
                     </Button>
                   </div>
                 )}
@@ -311,6 +296,7 @@ export default function PdfUploadSection() {
                     <Button 
                       onClick={handleCancelScan} 
                       variant="destructive" 
+                      size="lg"
                       className="gap-2"
                     >
                       <StopCircle className="w-4 h-4" />
@@ -324,14 +310,15 @@ export default function PdfUploadSection() {
         </CardContent>
       </Card>
 
+      {/* Scan Results Card - Separate from Upload */}
       {scanResult && (
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+        <Card className="rounded-xl border border-border shadow-sm">
+          <CardHeader className="pb-4">
+            <CardTitle className="flex items-center gap-2 text-lg font-semibold">
               <Search className="w-5 h-5" />
               Scan Results
             </CardTitle>
-            <CardDescription>
+            <CardDescription className="text-sm">
               {scanResult.matches.length === 0
                 ? 'No sensitive words found in the file'
                 : `Found ${scanResult.matches.length} matching word(s)/phrase(s) in ${scanResult.totalPages} page(s)`}
@@ -340,24 +327,26 @@ export default function PdfUploadSection() {
           <CardContent>
             {scanResult.matches.length > 0 ? (
               <div className="border rounded-lg overflow-hidden">
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead className="text-right">Matching Word/Phrase</TableHead>
-                      <TableHead className="text-right">Page Numbers</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {scanResult.matches.map((match, index) => (
-                      <TableRow key={index}>
-                        <TableCell className="font-medium">{match.phrase}</TableCell>
-                        <TableCell className="text-muted-foreground">
-                          {match.pages.join(', ')}
-                        </TableCell>
+                <div className="overflow-x-auto">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead className="text-right">Matching Word/Phrase</TableHead>
+                        <TableHead className="text-right">Page Numbers</TableHead>
                       </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
+                    </TableHeader>
+                    <TableBody>
+                      {scanResult.matches.map((match, index) => (
+                        <TableRow key={index}>
+                          <TableCell className="font-medium">{match.phrase}</TableCell>
+                          <TableCell className="text-muted-foreground">
+                            {match.pages.join(', ')}
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
               </div>
             ) : (
               <div className="text-center py-8 text-muted-foreground">
@@ -371,3 +360,4 @@ export default function PdfUploadSection() {
     </div>
   );
 }
+
